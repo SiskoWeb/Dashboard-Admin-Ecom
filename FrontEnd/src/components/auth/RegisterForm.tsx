@@ -5,9 +5,10 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setWhichForm } from "@/redux/formSlice";
 
 import notify from "@/hooks/useNotifaction";
-import Loader from "../Loader";
+import Loader from "../Shared/Loader";
+import { Register } from "@/lib/fetch";
 export default function RegisterForm() {
-  const [phone, setPhone] = useState<string>("");
+  const [role, setRole] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -17,7 +18,7 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: React.FormEvent | any) => {
     e.preventDefault();
-    console.log("apap");
+
     // validation input
     var validRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -32,14 +33,39 @@ export default function RegisterForm() {
       return;
     }
 
-    if (phone === "" || phone.length <= 9) {
-      setError("phone is Requierd");
-      return;
-    }
+    // if (role === "" ) {
+    //   setError("phone is Requierd");
+    //   return;
+    // }
 
     // display loading
     setLoading(true);
-    setError("");
+    const result = await Register({
+      email,
+      password,
+      role: "user",
+      isActive: false,
+    });
+
+    if (result.error) {
+      // Handle error
+
+      setLoading(false);
+      setError(result.error);
+      console.error(result.error);
+    } else {
+      // Handle success
+
+      dispatch(setWhichForm(false)); // change form from register to login
+      notify("Your account created", "success");
+      setLoading(false);
+      //empty inputs
+      setEmail("");
+      setPassword("");
+      setRole("");
+      setError("");
+      console.log(result);
+    }
   };
 
   return (
@@ -53,10 +79,7 @@ export default function RegisterForm() {
           {error}
         </div>
       )}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-3  md:flex-row"
-      >
+      <form className="flex flex-col gap-3  md:flex-row">
         <label>
           <div className="flex items-center mb-4">
             <input
@@ -95,15 +118,18 @@ export default function RegisterForm() {
           className="rounded-md p-3"
           type="text"
           placeholder="Email"
+          value={email}
         />
         <input
           onChange={(e) => setPassword(e.target.value)}
           className="rounded-md p-3"
           type="password"
           placeholder="Password"
+          value={password}
         />
         <button
-          role="button"
+          onClick={handleSubmit}
+          type="button"
           className="bg-[#2a66f9] text-white rounded-md font-bold cursor-pointer px-6 py-2"
         >
           Register

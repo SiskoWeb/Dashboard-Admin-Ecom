@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 
 import { setWhichForm } from "@/redux/formSlice";
 import { ToastContainer } from "react-toastify";
-import Loader from "../Loader";
+import Loader from "../Shared/Loader";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -33,10 +34,38 @@ export default function LoginForm() {
       setError("Password is Requierd");
       return;
     }
-
     // display loading
     setLoading(true);
     setError("");
+    try {
+      //this for validte is exist user or not useing next auth
+      const res: any = await signIn("Credentials", {
+        email,
+        password,
+        callbackUrl: '/',
+      });
+
+      console.log(res);
+      //if user not exist
+      if (res?.status === 401) {
+        setError(res?.error);
+        setLoading(false);
+        return;
+      }
+      // if there is pb in server
+      else if (res?.error === "500") {
+        setError("there is a problem in server");
+        setLoading(false);
+      }
+      // efter 2 sos rederact to dashboard
+      setTimeout(() => {
+        setLoading(false);
+        // router.replace("admin");
+      }, 2000);
+    } catch (error) {
+      setError("there is a problem in nternet or server");
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,10 +79,7 @@ export default function LoginForm() {
           {error}
         </div>
       )}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-3  md:flex-row"
-      >
+      <form className="flex flex-col gap-3  md:flex-row">
         <input
           onChange={(e) => setEmail(e.target.value)}
           className="rounded-md p-3"
@@ -66,7 +92,11 @@ export default function LoginForm() {
           type="password"
           placeholder="Password"
         />
-        <button className="bg-[#2a66f9] text-white rounded-md font-bold cursor-pointer px-6 py-2">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="bg-[#2a66f9] text-white rounded-md font-bold cursor-pointer px-6 py-2"
+        >
           Login
         </button>
       </form>

@@ -1,11 +1,21 @@
 <?php
+// header('Content-Type: application/json');
+
+// // Handle CORS
+// header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Methods: POST');
+// header('Access-Control-Allow-Headers: Content-Type');
+// Enable CORS
 header('Content-Type: application/json');
-
-// Handle CORS
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
+// Other headers to support the preflight request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    exit();
+}
 // Include database connection
 include 'db.php';
 
@@ -34,14 +44,14 @@ try {
             unset($user['password']);
 
             http_response_code(200);
-            echo json_encode(array("message" => "Login successful", "user" => $user));
+            echo json_encode(array("message" => "Login successful", "user" => $user,"status"=>200));
         } else {
-            http_response_code(401);
-            echo json_encode(array("message" => "Incorrect password."));
+            http_response_code(200);
+            echo json_encode(array("error" => "email or passowrd incorrect.","status"=>401));
         }
     } else {
-        http_response_code(404);
-        echo json_encode(array("message" => "Account not found."));
+        http_response_code(201);
+        echo json_encode(array("error" => "Account not found.","status"=>401));
     }
 } catch (PDOException $e) {
     http_response_code(500);

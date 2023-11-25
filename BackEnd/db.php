@@ -1,9 +1,9 @@
 <?php
 // Replace these variables with your actual database credentials
-$servername = "your_servername";
-$username = "your_username";
-$password = "your_password";
-$dbname = "your_database";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "dashboard_Product";
 
 try {
     // Create a new PDO instance

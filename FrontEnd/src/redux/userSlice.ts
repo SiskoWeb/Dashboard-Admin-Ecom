@@ -1,4 +1,4 @@
-import { UserInfo } from "@/types";
+import { UserInfo } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type initialStateType = {
