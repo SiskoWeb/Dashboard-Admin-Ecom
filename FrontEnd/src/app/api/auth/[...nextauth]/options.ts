@@ -1,8 +1,8 @@
-import NextAuth from "next-auth";
+import axios from "axios";
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { AuthOptions } from "next-auth";
 
-const authOptions: AuthOptions = {
+export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
@@ -11,7 +11,7 @@ const authOptions: AuthOptions = {
       },
 
       async authorize(credentials) {
-        const authResponse = await fetch(
+        const authResponse: any = await fetch(
           "http://localhost/adminDashboard/Backend/login.php",
           {
             method: "POST",
@@ -28,33 +28,35 @@ const authOptions: AuthOptions = {
 
         const user = await authResponse.json();
 
-        return user;
+        return user.user;
       },
     }),
   ],
   callbacks: {
-    session({ session, token }) {
+    async session({ session, token }) {
       session.user.id = token.id;
+      session.user.isActive = token.isActive;
       session.user.role = token.role;
       return session;
     },
-    jwt({ token, account, user }) {
-      if (account) {
-        token.accessToken = account.access_token;
-        token.role = (user as any).role;
+    async jwt({ token, user }) {
+      if (user) {
         token.id = user.id;
+        token.isActive = user.isActive;
+        // token.accessToken = account.access_token;
+        token.role = user.role;
 
         console.log({ user });
       }
       return token;
     },
   },
-  pages: {
-    signIn: "/",
-  },
   session: {
     strategy: "jwt",
   },
-  secret: "yassine",
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/",
+    signOut: "/",
+  },
 };
-export default NextAuth(authOptions);

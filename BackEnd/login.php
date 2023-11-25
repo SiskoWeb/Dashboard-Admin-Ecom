@@ -45,13 +45,14 @@ try {
 
             http_response_code(200);
             echo json_encode(array("message" => "Login successful", "user" => $user,"status"=>200));
-        } else {
-            http_response_code(200);
-            echo json_encode(array("error" => "email or passowrd incorrect.","status"=>401));
-        }
+        } 
+        // else {
+        //     http_response_code(401);
+        //     echo json_encode(array("error" => "email or passowrd incorrect.","status"=>401));
+        // }
     } else {
-        http_response_code(201);
-        echo json_encode(array("error" => "Account not found.","status"=>401));
+        http_response_code(401);
+        echo json_encode(array("error" => "email or passowrd incorrect.","status"=>401));
     }
 } catch (PDOException $e) {
     http_response_code(500);

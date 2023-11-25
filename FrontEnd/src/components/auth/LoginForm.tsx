@@ -20,6 +20,9 @@ export default function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(email);
+    console.log(password);
+    console.log("starting");
 
     // validation input
     var validRegex =
@@ -39,29 +42,28 @@ export default function LoginForm() {
     setError("");
     try {
       //this for validte is exist user or not useing next auth
-      const res: any = await signIn("Credentials", {
+      const response = await signIn("credentials", {
         email,
         password,
-        callbackUrl: '/',
-      });
 
-      console.log(res);
+        redirect: false,
+      });
+      console.log({ response });
+      if (response?.status === 200) {
+        console.log("login successful");
+        // efter 2 sos rederact to dashboard
+        setTimeout(() => {
+          setLoading(false);
+          router.replace("admin");
+        }, 2000);
+      }
+
       //if user not exist
-      if (res?.status === 401) {
-        setError(res?.error);
+      else if (response?.status === 401) {
+        setError("email or passowrd incorrect");
         setLoading(false);
         return;
       }
-      // if there is pb in server
-      else if (res?.error === "500") {
-        setError("there is a problem in server");
-        setLoading(false);
-      }
-      // efter 2 sos rederact to dashboard
-      setTimeout(() => {
-        setLoading(false);
-        // router.replace("admin");
-      }, 2000);
     } catch (error) {
       setError("there is a problem in nternet or server");
       setLoading(false);
@@ -92,14 +94,13 @@ export default function LoginForm() {
           type="password"
           placeholder="Password"
         />
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className="bg-[#2a66f9] text-white rounded-md font-bold cursor-pointer px-6 py-2"
-        >
-          Login
-        </button>
       </form>
+      <button
+        onClick={(e) => handleSubmit(e)}
+        className="bg-[#2a66f9] text-white rounded-md font-bold cursor-pointer px-6 py-2"
+      >
+        Login
+      </button>
       <div className="pt-3 text-white flex gap-1  items-center justify-center md:text-lg text-xs">
         <svg
           className="w-4 h-4 mr-2 text-green-500 dark:text-green-400 flex-shrink-0 opacity-60"

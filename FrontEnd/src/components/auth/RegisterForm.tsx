@@ -43,7 +43,7 @@ export default function RegisterForm() {
     const result = await Register({
       email,
       password,
-      role: "user",
+      role: "admin",
       isActive: false,
     });
 
@@ -87,7 +87,6 @@ export default function RegisterForm() {
               type="radio"
               value="user"
               name="role"
-              checked
               className="w-4 h-4 text-blue-600  focus:ring-blue-500 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
             ></input>
             <label
