@@ -1,16 +1,37 @@
 // Without a defined matcher, this one line applies next-auth
 // to the entire project
-export { default } from "next-auth/middleware";
 
-// export function middleware(request:Request){
+// Ref: https://next-auth.js.org/configuration/nextjs#advanced-usage
 
-//     const regex = new RegExp('/api/*')
+import { withAuth, NextRequestWithAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(request: NextRequestWithAuth) {
+    // console.log(request.nextUrl.pathname)
+    // console.log(request.nextauth.token)
 
-//     if(regex.test(request.url)){
-//     // add somthing for this line
-//     }
+    if (
+      request.nextUrl.pathname.startsWith("/admin") &&
+      request.nextauth.token?.role !== "admin"
+    ) {
+      return NextResponse.rewrite(new URL("/list", request.url));
+    }
 
-// }
+    if (
+      request.nextUrl.pathname.startsWith("/list") &&
+      request.nextauth.token?.role !== "admin" &&
+      request.nextauth.token?.role !== "user"
+    ) {
+      return NextResponse.rewrite(new URL("/", request.url));
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+  }
+);
 
 // Applies next-auth only to matching routes - can be regex
 // Ref: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher

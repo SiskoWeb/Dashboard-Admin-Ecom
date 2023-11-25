@@ -9,13 +9,13 @@ export default async function AdminLayout({ children }: LayoutProviderType) {
   const session: any = await getServerSession(options);
   // if (!orders?.data) return <Error />;
 
-  if (!session) {
-    redirect("/");
-  } else {
-    if (session.user.role === "user") {
-      redirect("/list");
-    }
-  }
+  // if (!session) {
+  //   redirect("/");
+  // } else {
+  //   if (session.user.role === "user") {
+  //     redirect("/list");
+  //   }
+  // }
 
   return (
     <main className="flex">

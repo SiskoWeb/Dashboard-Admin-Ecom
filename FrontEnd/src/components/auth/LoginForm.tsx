@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
@@ -9,6 +9,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setWhichForm } from "@/redux/formSlice";
 import { ToastContainer } from "react-toastify";
 import Loader from "../Shared/Loader";
+import notify from "@/hooks/useNotifaction";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ export default function LoginForm() {
   const [loadig, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-
+  const { data: session } = useSession();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log(email);
@@ -40,6 +41,7 @@ export default function LoginForm() {
     // display loading
     setLoading(true);
     setError("");
+
     try {
       //this for validte is exist user or not useing next auth
       const response = await signIn("credentials", {
@@ -51,11 +53,14 @@ export default function LoginForm() {
       console.log({ response });
       if (response?.status === 200) {
         console.log("login successful");
+        notify("login successfully", "success");
+        console.log(session);
         // efter 2 sos rederact to dashboard
+        // if(session?.user.isActive === false)
         setTimeout(() => {
           setLoading(false);
-          router.replace("admin");
-        }, 2000);
+          router.replace("/list");
+        }, 6000);
       }
 
       //if user not exist
