@@ -38,21 +38,25 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
+
         // Verify the password
         if (password_verify($data->password, $user['password'])) {
-            // Remove sensitive data from the user array
-            unset($user['password']);
 
+            // Check if the account is active
+        if ($user['isActive'] === 0) {
+            http_response_code(403); // 403 Forbidden - Indicates the server understood the request but refuses to authorize it.
+            echo json_encode(array("message" => "Your account is not active yet.", "status" => 403));
+        } else {
+            // Remove password from the user array
+            unset($user['password']);
             http_response_code(200);
-            echo json_encode(array("message" => "Login successful", "user" => $user,"status"=>200));
+            echo json_encode(array("message" => "Login successful", "user" => $user, "status" => 200));
+        }
         } 
-        // else {
-        //     http_response_code(401);
-        //     echo json_encode(array("error" => "email or passowrd incorrect.","status"=>401));
-        // }
+     
     } else {
         http_response_code(401);
-        echo json_encode(array("error" => "email or passowrd incorrect.","status"=>401));
+        echo json_encode(array("error" => "Email or password incorrect.", "status" => 401));
     }
 } catch (PDOException $e) {
     http_response_code(500);

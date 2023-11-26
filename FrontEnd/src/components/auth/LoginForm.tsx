@@ -18,11 +18,10 @@ export default function LoginForm() {
   const [loadig, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { data: session } = useSession();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(email);
-    console.log(password);
+
     console.log("starting");
 
     // validation input
@@ -54,17 +53,23 @@ export default function LoginForm() {
       if (response?.status === 200) {
         console.log("login successful");
         notify("login successfully", "success");
-        console.log(session);
+
         // efter 2 sos rederact to dashboard
-        // if(session?.user.isActive === false)
+
         setTimeout(() => {
           setLoading(false);
           router.replace("/list");
-        }, 6000);
+        }, 2000);
+      }
+      //if user dosen't active
+      if (response?.status === 403) {
+        setError("account dosen't active wait admin");
+        setLoading(false);
+        return;
       }
 
       //if user not exist
-      else if (response?.status === 401) {
+      if (response?.status === 401) {
         setError("email or passowrd incorrect");
         setLoading(false);
         return;

@@ -43,7 +43,7 @@ export const options: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.isActive = user.isActive;
-        // token.accessToken = account.access_token;
+
         token.role = user.role;
 
         console.log({ user });

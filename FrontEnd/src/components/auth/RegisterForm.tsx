@@ -8,7 +8,7 @@ import notify from "@/hooks/useNotifaction";
 import Loader from "../Shared/Loader";
 import { Register } from "@/lib/fetch";
 export default function RegisterForm() {
-  const [role, setRole] = useState<string>("");
+  const [role, setRole] = useState<string>("admin");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -18,7 +18,12 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: React.FormEvent | any) => {
     e.preventDefault();
-
+    const newUser = {
+      email,
+      password,
+      role: "admin",
+      isActive: false,
+    };
     // validation input
     var validRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -33,19 +38,14 @@ export default function RegisterForm() {
       return;
     }
 
-    // if (role === "" ) {
-    //   setError("phone is Requierd");
-    //   return;
-    // }
+    if (role === "") {
+      setError("phone is Requierd");
+      return;
+    } else if (role === "admin") newUser.isActive = true;
 
     // display loading
     setLoading(true);
-    const result = await Register({
-      email,
-      password,
-      role: "admin",
-      isActive: false,
-    });
+    const result = await Register(newUser);
 
     if (result.error) {
       // Handle error
