@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import FormSlice from "./formSlice";
-import UserSlice from "./userSlice";
+import statistic from "./statistic";
 
 export const store = configureStore({
   reducer: {
     FormSlice,
-    UserSlice,
+    statistic,
   },
 });
 export type RootState = ReturnType<typeof store.getState>;

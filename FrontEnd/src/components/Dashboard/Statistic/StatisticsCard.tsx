@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function StatisticsCard() {
+export default function StatisticsCard({ usersLength }: { usersLength: number }) {
   return (
     <div className="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
       <div className="flex justify-center items-center w-14 h-14 bg-white rounded-full transition-all duration-300 transform group-hover:rotate-12">
@@ -21,7 +21,7 @@ export default function StatisticsCard() {
         </svg>
       </div>
       <div className="text-right">
-        <p className="text-2xl">1,257</p>
+        <p className="text-2xl">{usersLength & usersLength}</p>
         <p>Visitors</p>
       </div>
     </div>
