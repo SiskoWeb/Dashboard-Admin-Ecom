@@ -1,9 +1,9 @@
-import NavBar from "@/components/Dashboard/NavBar";
-import SideBar from "@/components/Dashboard/SideBar";
 import { getServerSession } from "next-auth";
 import { options } from "../api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
 import { LayoutProviderType } from "@/types/types";
+import NavBar from "@/components/Dashboard/NavBar";
+import SideBar from "@/components/Dashboard/SideBar";
 
 export default async function AdminLayout({ children }: LayoutProviderType) {
   const session: any = await getServerSession(options);

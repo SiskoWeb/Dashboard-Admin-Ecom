@@ -1,11 +1,6 @@
 <?php
-header('Content-Type: application/json');
-
-// Handle CORS
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: PUT');
-header('Access-Control-Allow-Headers: Content-Type');
-
+// Enable CORS
+include 'cors.php';
 // Include database connection
 include 'db.php';
 
@@ -21,7 +16,7 @@ if (!isset($data->userId) || !isset($data->newRole)) {
 
 try {
     // Prepare the SQL statement to update the user's role
-    $stmt = $conn->prepare("UPDATE users SET role = :newRole WHERE id = :userId");
+    $stmt = $conn->prepare("UPDATE users SET role = :newRole,isActive = 1   WHERE id = :userId");
     $stmt->bindParam(':newRole', $data->newRole);
     $stmt->bindParam(':userId', $data->userId);
 

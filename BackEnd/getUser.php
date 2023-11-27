@@ -11,7 +11,7 @@ include 'db.php';
 
 try {
     // Prepare the SQL statement to fetch users with the role "user"
-    $stmt = $conn->prepare("SELECT id, email FROM users WHERE role = 'user'");
+    $stmt = $conn->prepare("SELECT id, email , isActive ,role FROM users WHERE role = 'user'");
     $stmt->execute();
 
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
