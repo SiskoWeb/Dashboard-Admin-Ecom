@@ -4,7 +4,7 @@ import axios from "axios";
 export async function Register(data: any) {
   try {
     const response = await axios.post(
-      "http://localhost/adminDashboard/Backend/createUser.php",
+      "http://localhost/adminDashboard/Backend/auth/create.php",
       JSON.stringify(data),
       {
         headers: {
@@ -25,7 +25,7 @@ const baseURL = process.env.api;
 export const getUsers = async () => {
   try {
     const response = await fetch(
-      `http://localhost/adminDashboard/Backend/getUser.php`
+      `http://localhost/adminDashboard/Backend/users/index.php`
     );
 
     if (!response.ok) {
@@ -44,7 +44,7 @@ export const getUsers = async () => {
 export const editUserIsActive = async (payload: any) => {
   try {
     const response = await fetch(
-      `http://localhost/adminDashboard/Backend/editUserIsActive.php`,
+      `http://localhost/adminDashboard/Backend/users/isActive.php`,
       {
         method: "POST",
         headers: {
@@ -66,13 +66,11 @@ export const editUserIsActive = async (payload: any) => {
     // throw error; // Propagate the error for further handling, if needed
   }
 };
-
-
 
 export const edittRoleAccount = async (payload: any) => {
   try {
     const response = await fetch(
-      `http://localhost/adminDashboard/Backend/edittRoleAccount.php`,
+      `http://localhost/adminDashboard/Backend/users/role.php`,
       {
         method: "POST",
         headers: {
@@ -94,13 +92,11 @@ export const edittRoleAccount = async (payload: any) => {
     // throw error; // Propagate the error for further handling, if needed
   }
 };
-
-
 
 export const deleteUser = async (payload: any) => {
   try {
     const response = await fetch(
-      `http://localhost/adminDashboard/Backend/deleteUser.php`,
+      `http://localhost/adminDashboard/Backend/users/delete.php`,
       {
         method: "POST",
         headers: {
@@ -122,4 +118,3 @@ export const deleteUser = async (payload: any) => {
     // throw error; // Propagate the error for further handling, if needed
   }
 };
-

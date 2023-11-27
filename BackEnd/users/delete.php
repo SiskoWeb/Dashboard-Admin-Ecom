@@ -1,8 +1,8 @@
 <?php
 // Enable CORS
-include 'cors.php';
+include './../cors.php';
 // Include database connection
-include 'db.php';
+include './../db.php';
 
 // Read JSON data from the request body
 $data = json_decode(file_get_contents("php://input"));
@@ -28,7 +28,7 @@ try {
         echo json_encode(array("message" => "User deleted successfully."));
     } else {
         http_response_code(404);
-        echo json_encode(array("message" => "User not found."));
+        echo json_encode(array("message" => "User not found." .$data->userId));
     }
 } catch (PDOException $e) {
     http_response_code(500);

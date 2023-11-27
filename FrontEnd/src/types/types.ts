@@ -15,5 +15,11 @@ export type usersType = {
   id: number;
   email: string;
   isActive: number | boolean;
-  role:string
+  role: string;
+};
+
+export type categoryType = {
+  id: number;
+  name: string;
+  image: string;
 };

@@ -1,9 +1,25 @@
 "use client";
 
+import { DeleteCategory } from "@/lib/categoriesFetch";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
 
 export default function CategoriesCard({ category }: { category: any }) {
+  //access client state
+  const queryClient = useQueryClient();
+
+  // this mutation for change status user
+  const { mutateAsync, isError, data, isPending } = useMutation({
+    mutationFn: async () =>
+      // function that edit user active
+      DeleteCategory(category.id),
+    onSuccess: async () => {
+      console.log("Deleted succssfully");
+      queryClient.invalidateQueries({ queryKey: ["categoriesList"] });
+    },
+  });
+
   return (
     <div className="shadow group  py-10  px-4 flex flex-col space-y-2 items-center cursor-pointer rounded-md hover:bg-gray-900/20 hover:smooth-hover">
       <Image
@@ -14,11 +30,14 @@ export default function CategoriesCard({ category }: { category: any }) {
         height="100"
       />
       <h4 className="text-blakc text-2xl font-bold capitalize text-center">
-        hello name
+        {category && category.name}
       </h4>
 
       <div className="flex  gap-1">
-        <button className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">
+        <button
+          onClick={() => mutateAsync()}
+          className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md"
+        >
           Delete
         </button>
         <button className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md">

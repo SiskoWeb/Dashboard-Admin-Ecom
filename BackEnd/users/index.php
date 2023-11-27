@@ -1,13 +1,9 @@
 <?php
-header('Content-Type: application/json');
 
-// Handle CORS
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET');
-header('Access-Control-Allow-Headers: Content-Type');
-
+// Enable CORS
+include './../cors.php';
 // Include database connection
-include 'db.php';
+include './../db.php';
 
 try {
     // Prepare the SQL statement to fetch users with the role "user"

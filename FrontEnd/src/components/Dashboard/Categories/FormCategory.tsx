@@ -1,11 +1,12 @@
 "use client";
 import Loader from "@/components/Shared/Loader";
 import { CreateCategory } from "@/lib/categoriesFetch";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { ChangeEvent, useState } from "react";
 
 export default function FormCategory() {
-  const [error, setError] = useState<string>("jfjf");
+  const [error, setError] = useState<string>("");
   const [loadig, setLoading] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [fileDisplay, setFileDisplay] = useState<File | null>(null);
@@ -18,6 +19,7 @@ export default function FormCategory() {
       setFileDisplay(e.target.files[0]);
     }
   };
+  const formData = new FormData();
 
   //this fun when user click add REQUIREDS<file,name>send as formdata
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,44 +31,36 @@ export default function FormCategory() {
       return;
     }
 
-    const formData = new FormData();
     formData.append("image", file);
     formData.append("name", name);
 
-    const result = await CreateCategory(formData);
-    console.log(result);
-    if (result.status === 201) {
-      const data = result.data;
-      console.log("Category created successfully:", data.message);
-    } else {
-      setError("Failed to create category");
-    }
-    //     try {
-    //       const response = await fetch(
-    //         "http://localhost/adminDashboard/Backend/categories/create.php",
-    //         {
-    //           method: "POST",
-    //           body: formData,
-    //         }
-    //       );
-
-    //       if (response.ok) {
-    //         const data = await response.json();
-    //         console.log("File uploaded successfully:", data.filePath);
-    //       } else {
-    //         setError("Failed to upload file");
-    //       }
-    //     } catch (error: any) {
-    //       console.error("Error uploading file:", error.message);
-    //     }
+    mutateAsync();
+    if (isError) setError("there is a pb ");
   };
+
+  //access client state
+  const queryClient = useQueryClient();
+
+  // this mutation for change status user
+  const { mutateAsync, isError, data, isPending } = useMutation({
+    mutationFn: async () =>
+      // function that edit user active
+      CreateCategory(formData),
+    onSuccess: async () => {
+      console.log("succssfully");
+      queryClient.invalidateQueries({ queryKey: ["categoriesList"] });
+    },
+    onError: async () => {
+      setError("there is a pb ");
+    },
+  });
 
   return (
     <div className="p-4 sm:p-7">
       <div className="text-center">
         <h1 className="block  text-2xl font-bold  ">Create Category</h1>
       </div>
-
+      {isPending && <Loader />}
       {/* display msg error */}
       {error && (
         <div className="text-center mt-5 bg-red-500 text-white  text-sm py-1 px-3 rounded-md mb-2">

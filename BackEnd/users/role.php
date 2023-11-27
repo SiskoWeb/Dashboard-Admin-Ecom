@@ -1,8 +1,8 @@
 <?php
 // Enable CORS
-include 'cors.php';
+include './../cors.php';
 // Include database connection
-include 'db.php';
+include './../db.php';
 
 // Read JSON data from the request body
 $data = json_decode(file_get_contents("php://input"));

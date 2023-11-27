@@ -12,7 +12,7 @@ export const options: NextAuthOptions = {
 
       async authorize(credentials) {
         const authResponse: any = await fetch(
-          "http://localhost/adminDashboard/Backend/login.php",
+          "http://localhost/adminDashboard/Backend/auth/login.php",
           {
             method: "POST",
             headers: {
