@@ -6,7 +6,7 @@ import { setWhichForm } from "@/redux/formSlice";
 
 import notify from "@/hooks/useNotifaction";
 import Loader from "../Shared/Loader";
-import { Register } from "@/lib/fetch";
+import { Register } from "@/lib/userFetch";
 export default function RegisterForm() {
   const [role, setRole] = useState<string>("admin");
   const [email, setEmail] = useState<string>("");

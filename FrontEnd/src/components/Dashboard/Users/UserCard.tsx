@@ -1,6 +1,10 @@
 "use client";
 
-import { deleteUser, editUserIsActive, edittRoleAccount } from "@/lib/fetch";
+import {
+  deleteUser,
+  editUserIsActive,
+  edittRoleAccount,
+} from "@/lib/userFetch";
 import { usersType } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
@@ -42,8 +46,6 @@ export default function UserCard({ user }: { user: usersType }) {
       queryClient.invalidateQueries({ queryKey: ["usersList"] });
     },
   });
-
-
 
   return (
     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">

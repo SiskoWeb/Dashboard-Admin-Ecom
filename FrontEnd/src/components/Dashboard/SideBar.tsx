@@ -85,7 +85,7 @@ export default function SideBar() {
                   clip-rule="evenodd"
                 ></path>
               </svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">categories</span>
+              <span className="flex-1 ml-3 whitespace-nowrap">Categories</span>
             </Link>
           </li>
         </ul>

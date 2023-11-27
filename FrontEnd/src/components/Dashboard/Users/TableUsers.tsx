@@ -1,24 +1,28 @@
 "use client";
 import React from "react";
 import UserCard from "./UserCard";
-import { editUserIsActive, getUsers } from "@/lib/fetch";
+import { editUserIsActive, getUsers } from "@/lib/userFetch";
 import { usersType } from "@/types/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from "@/components/Shared/Loader";
 import { useDispatch } from "react-redux";
 import { setLengthUser } from "@/redux/statistic";
+import Error from "@/components/Shared/ErrorPopup";
 
 export default function TableUsers() {
   const dispatch = useDispatch();
 
   // fetching data from server
-  const { data, isLoading, isSuccess } = useQuery({
+  const { data, isLoading, isSuccess, isError } = useQuery({
     queryKey: ["usersList"],
     queryFn: async () => getUsers(),
   });
 
   if (isSuccess) {
     dispatch(setLengthUser(data.length));
+  }
+  if (isError) {
+    return <Error />;
   }
   return (
     <main>
