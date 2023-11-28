@@ -28,7 +28,7 @@ try {
         if (password_verify($data->password, $user['password'])) {
 
             // Check if the account is active
-        if ($user['isActive'] === 0) {
+        if ($user['isActive'] === false) {
             http_response_code(403); // 403 Forbidden - Indicates the server understood the request but refuses to authorize it.
             echo json_encode(array("message" => "Your account is not active yet.", "status" => 403));
         } else {

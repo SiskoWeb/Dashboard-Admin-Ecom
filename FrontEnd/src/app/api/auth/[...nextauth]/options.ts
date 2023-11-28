@@ -28,7 +28,8 @@ export const options: NextAuthOptions = {
 
         const user = await authResponse.json();
 
-        if (user.user.isActive === 0) {
+        if (user.user.isActive === false) {
+          console.log("not active");
           return { status: 403 };
         }
         return user.user;
@@ -48,7 +49,9 @@ export const options: NextAuthOptions = {
         token.isActive = user.isActive;
 
         token.role = user.role;
-
+        if (user.isActive === false) {
+          console.log("not active");
+        }
         console.log({ user });
       }
       return token;

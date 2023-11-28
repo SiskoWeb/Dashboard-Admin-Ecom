@@ -21,7 +21,7 @@ export default function RegisterForm() {
     const newUser = {
       email,
       password,
-      role: "admin",
+      role,
       isActive: false,
     };
     // validation input
@@ -87,6 +87,8 @@ export default function RegisterForm() {
               type="radio"
               value="user"
               name="role"
+              onChange={(e) => setRole(e.target.value)}
+              defaultChecked
               className="w-4 h-4 text-blue-600  focus:ring-blue-500 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
             ></input>
             <label
@@ -101,6 +103,7 @@ export default function RegisterForm() {
               id="admin"
               type="radio"
               value="admin"
+              onChange={(e) => setRole(e.target.value)}
               name="role"
               className="w-4 h-4 text-blue-600  focus:ring-blue-500 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600"
             ></input>
