@@ -26,6 +26,7 @@ export default function CardProduct({ product }: { product: productType }) {
     },
   });
 
+  const discountAmount = (product.price * product.price_off) / 100;
   return (
     <>
       <div className="relative w-72  bg-white shadow-md rounded-xl duration-500  hover:shadow-xl">
@@ -46,10 +47,12 @@ export default function CardProduct({ product }: { product: productType }) {
             </p>
             <div className="flex items-center">
               <p className="text-lg font-semibold text-black cursor-auto my-3">
-                0
+                ${product && product.price - discountAmount}
               </p>
               <del>
-                <p className="text-sm text-gray-600 cursor-auto ml-2">$199</p>
+                <p className="text-sm text-gray-600 cursor-auto ml-2">
+                  ${product && product.price}
+                </p>
               </del>
               <div className="ml-auto flex gap-2">
                 <button onClick={() => setShouldShow(true)}>

@@ -2,7 +2,8 @@
 import { useState, ChangeEvent } from "react";
 import { productType } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateProduct, UpdateCategory } from "@/lib/productFetch";
+import { CreateProduct, UpdateProduct } from "@/lib/productFetch";
+import { validateForm } from "./useValidator";
 
 export interface ProductStateOptions {
   productToEdit?: productType;
@@ -35,33 +36,6 @@ export function useProductState(options: ProductStateOptions) {
   );
 
   // Form validation function
-  const validateForm = ({
-    file,
-    name,
-    category,
-    quantity,
-    min_quantity,
-    price,
-    price_off,
-  }: any) => {
-    if (!file) return "No file selected";
-    if (!name) return "Name is required";
-    if (!category) return "Category is required";
-    if (quantity === null || isNaN(quantity) || quantity <= 0)
-      return "Invalid quantity";
-    if (min_quantity === null || isNaN(min_quantity) || min_quantity <= 0)
-      return "Invalid minimum quantity";
-    if (price === null || isNaN(price) || price <= 0) return "Invalid price";
-    if (price_off === null || isNaN(price_off) || price_off < 0)
-      return "Invalid discount price";
-
-    // Add specific validation for "edit" operation
-    if (options.label === "edit" && !options.productToEdit) {
-      return "Invalid product to edit";
-    }
-
-    return "";
-  };
 
   // Function to handle file change
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -90,12 +64,25 @@ export function useProductState(options: ProductStateOptions) {
       price_off,
     });
 
+    if (options.label === "add" && !file) {
+      return "No file selected";
+    }
+    // Add specific validation for "edit" operation
+    if (options.label === "edit" && !options.productToEdit) {
+      return "Invalid product to edit";
+    }
+
     if (validationError) {
       setError(validationError);
       return;
     }
-    if (!file) return setError("file is required");
-    formData.append("image", file);
+    if (options.label === "edit" && file) {
+      formData.append("image", file);
+    }
+    if (options.label === "add" && file) {
+      formData.append("image", file);
+    }
+
     formData.append("name", name);
     formData.append("category", category);
     formData.append("quantity", quantity?.toString() || "");
@@ -105,7 +92,7 @@ export function useProductState(options: ProductStateOptions) {
     formData.append("description", description);
 
     if (options.productToEdit && options.label === "edit") {
-      formData.append("categoryId", options.productToEdit.id.toString());
+      formData.append("productId", options.productToEdit.id.toString());
     }
 
     // after validating inputs, send data to the server
@@ -125,7 +112,7 @@ export function useProductState(options: ProductStateOptions) {
     if (options.label === "add") {
       return await CreateProduct(formData);
     } else if (options.label === "edit") {
-      return await UpdateCategory(formData);
+      return await UpdateProduct(formData);
     }
   };
 

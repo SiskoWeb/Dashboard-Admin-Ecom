@@ -46,10 +46,10 @@ export async function DeleteProduct(productId: number) {
   }
 }
 
-export async function UpdateCategory(formData: FormData) {
+export async function UpdateProduct(formData: FormData) {
   try {
     const response = await axios.post(
-      "http://localhost/adminDashboard/Backend/categories/update.php",
+      "http://localhost/adminDashboard/Backend/products/update.php",
       formData,
       {
         headers: {
