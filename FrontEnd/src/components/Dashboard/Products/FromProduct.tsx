@@ -1,16 +1,10 @@
 "use client";
 import Loader from "@/components/Shared/Loader";
-import {
-  CreateCategory,
-  UpdateCategory,
-  getCategories,
-} from "@/lib/categoriesFetch";
+import { getCategories } from "@/lib/categoriesFetch";
 import { categoryType, productType } from "@/types/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { ChangeEvent, useRef, useState } from "react";
 import { useProductState } from "./useProductState";
-import { CreateProduct } from "@/lib/productFetch";
 
 //this component works for two side editing creating
 export default function FormProduct({
