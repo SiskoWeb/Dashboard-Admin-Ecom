@@ -73,7 +73,7 @@ export default function ListProduct({
         mutationFun={mutationFilter}
       />
       <main className="m-4 p-4 shadow-md ">
-        <div className="min-w-screen grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-center justify-center p-4 cursor-pointer w-full">
+        <div className="min-w-screen grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-center justify-center p-4 cursor-pointer ">
           {paginatedProducts.length === 0 ? (
             <h3>No Products</h3>
           ) : (

@@ -6,12 +6,13 @@ import ListProduct from "@/components/HomePage/ListProduct";
 import Error from "@/components/Shared/ErrorPopup";
 import { getProducts } from "@/lib/productFetch";
 import NavBar from "@/components/Dashboard/NavBar";
+import LogOut from "@/components/Shared/LogOut";
+import SideBar from "@/components/Dashboard/SideBar";
 
 export default async function ProductsList() {
-  // const session: any = await getServerSession(options);
-  // if (!session) {
-  //   redirect("/");
-  // }
+  const session: any = await getServerSession(options);
+  if (!session) {
+  }
   // FETCHING DATA  IN SERVER SIDE
   const products = await getProducts();
   console.log(products);
@@ -20,7 +21,7 @@ export default async function ProductsList() {
   return (
     <>
       <NavBar />
-
+      {session.user.role === "admin" ? <SideBar /> : null}
       <ListProduct productsList={products} />
     </>
   );

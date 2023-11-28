@@ -2,14 +2,17 @@
 import { usePathname } from "next/navigation";
 
 import Link from "next/link";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function SideBar() {
   const pathname = usePathname();
-
+  const toggleNavBar = useAppSelector((state) => state.FormSlice.toggleNavBar);
   return (
     <aside
       id="logo-sidebar"
-      className={`fixed left-[-100%] md:left-0 top-0 z-40 
+      className={`fixed ${
+        toggleNavBar ? "left-0" : "left-[-100%]"
+      } md:left-0 top-0 z-40 
      w-64 h-screen pt-20 transition-right duration-300 ease-in-out
       bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800
        dark:border-gray-700`}
