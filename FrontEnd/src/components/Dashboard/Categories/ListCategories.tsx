@@ -17,7 +17,7 @@ export default function ListCategories() {
 
   // fetching data from server
   const { data, isLoading, isSuccess, isError } = useQuery({
-    queryKey: ["categoriesList"],
+    queryKey: ["ListCategories"],
     queryFn: async () => getCategories(),
   });
 
@@ -35,7 +35,7 @@ export default function ListCategories() {
       {isLoading ? (
         <Loader />
       ) : data?.length === 0 ? (
-        <p>no Users</p>
+        <p>no Products</p>
       ) : (
         data?.map((category: categoryType) => (
           <CategoriesCard key={category.id} category={category} />

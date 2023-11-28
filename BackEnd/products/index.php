@@ -15,9 +15,9 @@ $products = $get->fetchAll(PDO::FETCH_ASSOC);
 
 //MiddleWare To Add BaseUrl
  $baseUrl = 'http://localhost/adminDashboard/Backend/products'; // Replace with your actual base URL
- foreach ($products as &$products) {
-     if (isset($category['image'])) {
-         $products['image'] = $baseUrl . '/' . $products['image'];
+ foreach ($products as &$product) {
+     if (isset($product['image'])) {
+         $product['image'] = $baseUrl . '/' . $product['image'];
      }
  }
 http_response_code(200);

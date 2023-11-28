@@ -1,10 +1,16 @@
 "use client";
 import Loader from "@/components/Shared/Loader";
-import { CreateCategory, UpdateCategory } from "@/lib/categoriesFetch";
+import {
+  CreateCategory,
+  UpdateCategory,
+  getCategories,
+} from "@/lib/categoriesFetch";
 import { categoryType, productType } from "@/types/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { ChangeEvent, useRef, useState } from "react";
+import { useProductState } from "./useProductState";
+import { CreateProduct } from "@/lib/productFetch";
 
 //this component works for two side editing creating
 export default function FormProduct({
@@ -22,26 +28,25 @@ export default function FormProduct({
   );
 
   //states product
-  const [file, setFile] = useState<File | null>(null);
-  const [name, setName] = useState<string | null>(productToEdit?.name || "");
-  const [price, setPrice] = useState<number | null>(
-    productToEdit?.price || null
-  );
-  const [price_off, setPrice_off] = useState<number | null>(
-    productToEdit?.price_off || null
-  );
-  const [description, setDescription] = useState<string | null>(
-    productToEdit?.description || null
-  );
-  const [quantity, setQuantity] = useState<number | null>(
-    productToEdit?.quantity || null
-  );
-  const [category, setCategory] = useState<string | null>(
-    productToEdit?.category || null
-  );
-  const [min_quantity, setMin_quantity] = useState<number | null>(
-    productToEdit?.quantity || null
-  );
+
+  const {
+    file,
+    setFile,
+    name,
+    setName,
+    price,
+    setPrice,
+    price_off,
+    setPrice_off,
+    description,
+    setDescription,
+    quantity,
+    setQuantity,
+    category,
+    setCategory,
+    min_quantity,
+    setMin_quantity,
+  } = useProductState(productToEdit);
 
   ///this fun for saveing image use upload to file variabl
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,17 +62,34 @@ export default function FormProduct({
   //this fun when user click add REQUIREDS<file,name>send as formdata
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //validation
+
+    // Validation
     if (!file) return setError("No file selected");
-    if (!name) return setError("Name is Required");
+    if (!name) return setError("Name is required");
+    if (!category) return setError("Category is required");
+    if (quantity === null || isNaN(quantity) || quantity <= 0)
+      return setError("Invalid quantity");
+    if (min_quantity === null || isNaN(min_quantity) || min_quantity <= 0)
+      return setError("Invalid minimum quantity");
+    if (price === null || isNaN(price) || price <= 0)
+      return setError("Invalid price");
+    if (price_off === null || isNaN(price_off) || price_off < 0)
+      return setError("Invalid discount price");
 
     formData.append("image", file);
     formData.append("name", name);
+    formData.append("category", category);
+    formData.append("quantity", quantity?.toString() || "");
+    formData.append("min_quantity", min_quantity?.toString() || "");
+    formData.append("price", price.toString());
+    formData.append("price_off", price_off.toString());
+    formData.append("description", description);
 
     if (productToEdit && label === "edit") {
       formData.append("categoryId", productToEdit.id.toString());
     }
 
+    //after validat inputs send data to server
     mutateAsync();
     if (isError) setError("there is a pb ");
   };
@@ -75,7 +97,7 @@ export default function FormProduct({
   // to set which function work update or create
   const funByLabel = async () => {
     if (label === "add") {
-      return await CreateCategory(formData);
+      return await CreateProduct(formData);
     } else if (label === "edit") {
       return await UpdateCategory(formData);
     }
@@ -92,7 +114,7 @@ export default function FormProduct({
     //after mutating successfullt
     onSuccess: async () => {
       console.log("succssfully");
-      queryClient.invalidateQueries({ queryKey: ["categoriesList"] });
+      queryClient.invalidateQueries({ queryKey: ["ProductList"] });
       setError("");
       setFile(null);
       setName("");
@@ -103,6 +125,21 @@ export default function FormProduct({
       setError("there is a pb ");
     },
   });
+
+  // fetching categoris to display for user
+  const {
+    data: listCategories,
+    isLoading,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["ListCategories"],
+    queryFn: async () => getCategories(),
+  });
+
+  if (isSuccess) {
+  }
+  if (isError) {
+  }
 
   return (
     <div className="p-4 sm:p-7">
@@ -153,6 +190,7 @@ export default function FormProduct({
                   <input
                     type="text"
                     id="name"
+                    value={name}
                     onChange={(e) => setName(e.target.value)}
                     name="name"
                     placeholder="electrec..."
@@ -165,6 +203,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="price"
+                      value={price}
                       onChange={(e) => setPrice(+e.target.value)}
                       name="name"
                       placeholder="price"
@@ -173,6 +212,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="price_off"
+                      value={price_off}
                       onChange={(e) => setPrice_off(+e.target.value)}
                       name="name"
                       placeholder="Offer 10%"
@@ -191,11 +231,20 @@ export default function FormProduct({
                     id="category-create"
                     className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
                   >
-                    <option selected value="">
-                      Select category
+                    <option selected value={category}>
+                      {category ? category : "Select Category"}
                     </option>
-                    <option value="13">Flowbite</option>
-                    <option value="14">React</option>
+                    {isLoading ? (
+                      <Loader />
+                    ) : data?.length === 0 ? (
+                      <option disabled>no categories</option>
+                    ) : (
+                      listCategories?.map((category: categoryType) => (
+                        <option key={category.id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </label>
                 <label htmlFor="price">
@@ -204,6 +253,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="quantity"
+                      value={quantity}
                       onChange={(e) => setQuantity(+e.target.value)}
                       name="name"
                       placeholder="quantity"
@@ -212,6 +262,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="min_quantity"
+                      value={min_quantity}
                       onChange={(e) => setMin_quantity(+e.target.value)}
                       name="min_quantity"
                       placeholder="min_quantity"
@@ -223,6 +274,7 @@ export default function FormProduct({
                   Discription:
                   <textarea
                     id="discription"
+                    value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     name="discription"
                     placeholder="Discription of product"

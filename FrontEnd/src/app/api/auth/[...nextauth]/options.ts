@@ -28,6 +28,9 @@ export const options: NextAuthOptions = {
 
         const user = await authResponse.json();
 
+        if (user.user.isActive === 0) {
+          return { status: 403 };
+        }
         return user.user;
       },
     }),

@@ -26,7 +26,7 @@ export default function CategoriesCard({
       DeleteCategory(category.id),
     onSuccess: async () => {
       console.log("Deleted succssfully");
-      queryClient.invalidateQueries({ queryKey: ["categoriesList"] });
+      queryClient.invalidateQueries({ queryKey: ["ListCategories"] });
     },
   });
 

@@ -1,15 +1,27 @@
 "use client";
 import { signOut } from "next-auth/react";
-import React from "react";
+import React, { useState } from "react";
 import { FiLogOut } from "react-icons/fi";
+import Loader from "./Loader";
+import { useRouter } from "next/navigation";
 
 export default function LogOut() {
-  const onSignOut = (e: any) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const reouter = useRouter();
+  const onSignOut = async () => {
+    setLoading(true);
     signOut();
+    reouter.push("/");
+    setLoading(false);
   };
+
   return (
-    <button onClick={(e) => onSignOut(e)}>
-      <FiLogOut />
-    </button>
+    <>
+      {loading ? <Loader /> : null}
+      <button onClick={() => onSignOut()}>
+        <FiLogOut />
+      </button>
+    </>
   );
 }

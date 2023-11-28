@@ -19,10 +19,10 @@ export async function CreateProduct(formData: FormData) {
   }
 }
 
-export async function getCategories() {
+export async function getProducts() {
   try {
     const response = await axios.post(
-      "http://localhost/adminDashboard/Backend/categories/"
+      "http://localhost/adminDashboard/Backend/products/"
     );
 
     console.log(response);
@@ -32,11 +32,11 @@ export async function getCategories() {
   }
 }
 
-export async function DeleteCategory(categoryId: number) {
+export async function DeleteProduct(productId: number) {
   try {
     const response = await axios.post(
-      "http://localhost/adminDashboard/Backend/categories/delete.php",
-      { categoryId }
+      "http://localhost/adminDashboard/Backend/products/delete.php",
+      { productId }
     );
 
     console.log(response);
