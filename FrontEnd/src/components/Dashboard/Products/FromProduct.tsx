@@ -4,7 +4,7 @@ import { CreateCategory, UpdateCategory } from "@/lib/categoriesFetch";
 import { categoryType, productType } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 
 //this component works for two side editing creating
 export default function FormProduct({
@@ -17,18 +17,41 @@ export default function FormProduct({
   onRequestClose: () => void;
 }) {
   const [error, setError] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
   const [fileDisplay, setFileDisplay] = useState<string | null>(
     productToEdit?.image || ""
   );
+
+  //states product
+  const [file, setFile] = useState<File | null>(null);
   const [name, setName] = useState<string | null>(productToEdit?.name || "");
+  const [price, setPrice] = useState<number | null>(
+    productToEdit?.price || null
+  );
+  const [price_off, setPrice_off] = useState<number | null>(
+    productToEdit?.price_off || null
+  );
+  const [description, setDescription] = useState<string | null>(
+    productToEdit?.description || null
+  );
+  const [quantity, setQuantity] = useState<number | null>(
+    productToEdit?.quantity || null
+  );
+  const [category, setCategory] = useState<string | null>(
+    productToEdit?.category || null
+  );
+  const [min_quantity, setMin_quantity] = useState<number | null>(
+    productToEdit?.quantity || null
+  );
 
   ///this fun for saveing image use upload to file variabl
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      setFileDisplay(URL.createObjectURL(selectedFile));
     }
   };
+
   const formData = new FormData();
 
   //this fun when user click add REQUIREDS<file,name>send as formdata
@@ -51,8 +74,9 @@ export default function FormProduct({
 
   // to set which function work update or create
   const funByLabel = async () => {
-    if (label === "add") return await CreateCategory(formData);
-    else if (label === "edit") {
+    if (label === "add") {
+      return await CreateCategory(formData);
+    } else if (label === "edit") {
       return await UpdateCategory(formData);
     }
   };
@@ -95,7 +119,24 @@ export default function FormProduct({
         </div>
       )}
       {fileDisplay && (
-        <Image src={fileDisplay} width="50" height="50" alt="image ccategory" />
+        <div className="mt-3">
+          {/* display the selected image */}
+          {typeof fileDisplay === "string" ? (
+            <Image
+              src={fileDisplay}
+              width={50}
+              height={50}
+              alt="Category Image"
+            />
+          ) : (
+            <Image
+              src={URL.createObjectURL(fileDisplay)}
+              width={50}
+              height={50}
+              alt="Category Image"
+            />
+          )}
+        </div>
       )}
       <div className="mt-5">
         <form onSubmit={handleUpload}>
@@ -124,7 +165,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="price"
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => setPrice(+e.target.value)}
                       name="name"
                       placeholder="price"
                       className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
@@ -132,7 +173,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="price_off"
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => setPrice_off(+e.target.value)}
                       name="name"
                       placeholder="Offer 10%"
                       className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
@@ -146,16 +187,15 @@ export default function FormProduct({
                 >
                   Category
                   <select
+                    onChange={(e) => setCategory(e.target.value)}
                     id="category-create"
                     className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
                   >
                     <option selected value="">
                       Select category
                     </option>
-                    <option value="FL">Flowbite</option>
-                    <option value="RE">React</option>
-                    <option value="AN">Angular</option>
-                    <option value="VU">Vue</option>
+                    <option value="13">Flowbite</option>
+                    <option value="14">React</option>
                   </select>
                 </label>
                 <label htmlFor="price">
@@ -164,7 +204,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="quantity"
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => setQuantity(+e.target.value)}
                       name="name"
                       placeholder="quantity"
                       className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
@@ -172,7 +212,7 @@ export default function FormProduct({
                     <input
                       type="number"
                       id="min_quantity"
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => setMin_quantity(+e.target.value)}
                       name="min_quantity"
                       placeholder="min_quantity"
                       className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
@@ -183,7 +223,7 @@ export default function FormProduct({
                   Discription:
                   <textarea
                     id="discription"
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => setDescription(e.target.value)}
                     name="discription"
                     placeholder="Discription of product"
                     className="resized py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"

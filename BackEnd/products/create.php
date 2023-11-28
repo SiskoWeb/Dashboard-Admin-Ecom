@@ -8,7 +8,7 @@ include './../db.php';
 if (
     !isset($_POST['name']) ||
     !isset($_FILES['image']) ||
-    !isset($_POST['category_id']) ||
+    !isset($_POST['category']) ||
     !isset($_POST['quantity']) ||
     !isset($_POST['min_quantity']) ||
     !isset($_POST['price']) ||
@@ -21,7 +21,7 @@ if (
 }
 
 $name = $_POST['name'];
-$category_id = $_POST['category_id'];
+$category = $_POST['category'];
 $quantity = $_POST['quantity'];
 $min_quantity = $_POST['min_quantity'];
 $price = $_POST['price'];
@@ -35,10 +35,10 @@ try {
     move_uploaded_file($image['tmp_name'], $imagePath);
 
     // Insert data into the database
-    $stmt = $conn->prepare('INSERT INTO products (name, image, category_id, quantity, min_quantity, price, price_off, description) VALUES (:name, :image, :category_id, :quantity, :min_quantity, :price, :price_off, :description)');
+    $stmt = $conn->prepare('INSERT INTO products (name, image, category, quantity, min_quantity, price, price_off, description) VALUES (:name, :image, :category, :quantity, :min_quantity, :price, :price_off, :description)');
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':image', $imagePath);
-    $stmt->bindParam(':category_id', $category_id);
+    $stmt->bindParam(':category', $category);
     $stmt->bindParam(':quantity', $quantity);
     $stmt->bindParam(':min_quantity', $min_quantity);
     $stmt->bindParam(':price', $price);

@@ -28,7 +28,7 @@ export type productType = {
   id: number;
   name: string;
   image: string;
-  category_id: number;
+  category: string;
   quantity: number;
   min_quantity: number;
   price: number;
