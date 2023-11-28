@@ -44,7 +44,7 @@ export default function TableUsers() {
               </th>
             </tr>
           </thead>
-          <tbody className="h-[300px]">
+          <tbody>
             {isLoading ? (
               <Loader />
             ) : data?.length === 0 ? (

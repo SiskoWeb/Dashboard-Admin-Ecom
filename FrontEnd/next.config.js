@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-    images: { domains: ['img.freepik.com'] }
+    images: { domains: ['localhost'] }
 }
 
 module.exports = nextConfig

@@ -34,7 +34,7 @@ export default function ButtonCategoryForm() {
           className="text-black/50 group-hover:text-white group-hover:smooth-hover text-center"
           href="#"
         >
-          Create group
+          Create Category
         </a>
       </div>
 
@@ -42,7 +42,7 @@ export default function ButtonCategoryForm() {
         shouldShow={shouldShow}
         onRequestClose={() => setShouldShow(false)}
       >
-        <FormCategory label="add" />
+        <FormCategory label="add" onRequestClose={() => setShouldShow(false)}/>
       </Model>
     </>
   );

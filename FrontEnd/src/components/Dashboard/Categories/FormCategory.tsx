@@ -6,25 +6,33 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { ChangeEvent, useState } from "react";
 
+//this component works for two side editing creating
 export default function FormCategory({
   label = "add",
   categoryToEdit,
+  onRequestClose,
 }: {
   label: string;
   categoryToEdit?: categoryType;
+  onRequestClose: () => void;
 }) {
+  //states
   const [error, setError] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
-  const [fileDisplay, setFileDisplay] = useState<File | null>(null);
+  const [fileDisplay, setFileDisplay] = useState<string | null | File>(
+    categoryToEdit?.image || null
+  );
   const [name, setName] = useState<string | null>(categoryToEdit?.name || "");
 
   ///this fun for saveing image use upload to file variabl
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
-      setFileDisplay(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      setFileDisplay(URL.createObjectURL(selectedFile));
     }
   };
+
   const formData = new FormData();
 
   //this fun when user click add REQUIREDS<file,name>send as formdata
@@ -32,11 +40,8 @@ export default function FormCategory({
     e.preventDefault();
     //validation
     if (!file) return setError("No file selected");
-    else if (!name) return setError("Name is Required");
+    if (!name) return setError("Name is Required");
 
-
-
-    
     formData.append("image", file);
     formData.append("name", name);
 
@@ -71,6 +76,8 @@ export default function FormCategory({
       setError("");
       setFile(null);
       setName("");
+      //hide model
+      onRequestClose();
     },
     onError: async () => {
       setError("there is a pb ");
@@ -91,14 +98,26 @@ export default function FormCategory({
           {error}
         </div>
       )}
-      {/* {fileDisplay && (
-        <Image
-          src={fileDisplay}
-          width="50"
-          height="50"
-          alt="image ccategory"
-        />
-      )} */}
+      {fileDisplay && (
+        <div className="mt-3">
+          {/* display the selected image */}
+          {typeof fileDisplay === "string" ? (
+            <Image
+              src={fileDisplay}
+              width={50}
+              height={50}
+              alt="Category Image"
+            />
+          ) : (
+            <Image
+              src={URL.createObjectURL(fileDisplay)}
+              width={50}
+              height={50}
+              alt="Category Image"
+            />
+          )}
+        </div>
+      )}
       <div className="mt-5">
         <form onSubmit={handleUpload}>
           <div className="grid gap-y-4">

@@ -20,6 +20,7 @@ try {
 
     // Check if image is provided
     if (isset($_FILES['image'])) {
+        $image = $_FILES['image'];
      $imagePath = './upload/' . $image['name'];
     move_uploaded_file($image['tmp_name'], $imagePath);
 

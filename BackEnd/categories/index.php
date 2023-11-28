@@ -13,6 +13,13 @@ $get->execute();
 
 $categories = $get->fetchAll(PDO::FETCH_ASSOC);
 
+//MiddleWare To Add BaseUrl
+ $baseUrl = 'http://localhost/adminDashboard/Backend/categories'; // Replace with your actual base URL
+ foreach ($categories as &$category) {
+     if (isset($category['image'])) {
+         $category['image'] = $baseUrl . '/' . $category['image'];
+     }
+ }
 http_response_code(200);
 echo json_encode($categories);
 

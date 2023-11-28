@@ -1,9 +1,15 @@
+import ListProducts from "@/components/Dashboard/Products/ListProducts";
+import { Metadata } from "next";
 import React from "react";
 
+export const metadata: Metadata = {
+  title: "Products",
+  description: "Crud Products",
+};
 export default function pages() {
   return (
-    <div className="flex flex-col gap-y-10 overflow-hidden rounded-xl bg-white p-8 shadow">
-      <h2 className="font-extrabold bg-white p-3">إضافة منتج جديد</h2>
+    <div className="flex flex-col  overflow-hidden rounded-xl bg-white p-6 shadow">
+      <ListProducts />
     </div>
   );
 }

@@ -71,7 +71,7 @@ export default function UserCard({ user }: { user: usersType }) {
           ) : (
             <>
               <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div>
-              Ofline
+              Offline
             </>
           )}
         </div>

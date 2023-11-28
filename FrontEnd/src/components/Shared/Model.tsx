@@ -13,8 +13,9 @@ export default function Model({
     <>
       {shouldShow && (
         <div
+          id="form-Category"
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 w-full h-full overflow-auto "
-          onClick={onRequestClose}   
+          onClick={onRequestClose}
         >
           <div
             className="bg-white my-[10%]  w-full max-w-md mx-auto p-6 rounded-md"

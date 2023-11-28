@@ -23,3 +23,15 @@ export type categoryType = {
   name: string;
   image: string;
 };
+
+export type productType = {
+  id: number;
+  name: string;
+  image: string;
+  category_id: number;
+  quantity: number;
+  min_quantity: number;
+  price: number;
+  price_off: number;
+  description: string;
+};
