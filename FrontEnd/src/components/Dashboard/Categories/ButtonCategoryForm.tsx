@@ -42,7 +42,7 @@ export default function ButtonCategoryForm() {
         shouldShow={shouldShow}
         onRequestClose={() => setShouldShow(false)}
       >
-        <FormCategory />
+        <FormCategory label="add" />
       </Model>
     </>
   );

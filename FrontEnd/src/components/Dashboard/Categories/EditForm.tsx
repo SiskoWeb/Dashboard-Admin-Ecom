@@ -1,22 +1,18 @@
 "use client";
 import Loader from "@/components/Shared/Loader";
-import { CreateCategory, UpdateCategory } from "@/lib/categoriesFetch";
+import { CreateCategory } from "@/lib/categoriesFetch";
 import { categoryType } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { ChangeEvent, useState } from "react";
 
-export default function FormCategory({
-  label = "add",
-  categoryToEdit,
-}: {
-  label: string;
-  categoryToEdit?: categoryType;
-}) {
+export default function EditForm({ category }: { category: categoryType }) {
   const [error, setError] = useState<string>("");
+  const [loadig, setLoading] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [fileDisplay, setFileDisplay] = useState<File | null>(null);
-  const [name, setName] = useState<string | null>(categoryToEdit?.name || "");
+  const [name, setName] = useState<string>("");
+  const [id, setId] = useState<number | null>(category.id);
 
   ///this fun for saveing image use upload to file variabl
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,29 +27,18 @@ export default function FormCategory({
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //validation
-    if (!file) return setError("No file selected");
-    else if (!name) return setError("Name is Required");
+    if (!file || !name) {
+      setError("No file selected and name");
 
+      return;
+    }
 
-
-    
     formData.append("image", file);
     formData.append("name", name);
-
-    if (categoryToEdit && label === "edit") {
-      formData.append("categoryId", categoryToEdit.id.toString());
-    }
+    formData.append("id", category.id.toString());
 
     mutateAsync();
     if (isError) setError("there is a pb ");
-  };
-
-  // to set which function work update or create
-  const funByLabel = async () => {
-    if (label === "add") return await CreateCategory(formData);
-    else if (label === "edit") {
-      return await UpdateCategory(formData);
-    }
   };
 
   //access client state
@@ -63,8 +48,7 @@ export default function FormCategory({
   const { mutateAsync, isError, data, isPending } = useMutation({
     mutationFn: async () =>
       // function that edit user active
-      await funByLabel(),
-    //after mutating successfullt
+      CreateCategory(formData),
     onSuccess: async () => {
       console.log("succssfully");
       queryClient.invalidateQueries({ queryKey: ["categoriesList"] });
@@ -80,9 +64,7 @@ export default function FormCategory({
   return (
     <div className="p-4 sm:p-7">
       <div className="text-center">
-        <h1 className="block  text-2xl font-bold  ">
-          {label === "add" ? "Create Category" : "Update category"}
-        </h1>
+        <h1 className="block  text-2xl font-bold  ">Update Category</h1>
       </div>
       {isPending && <Loader />}
       {/* display msg error */}

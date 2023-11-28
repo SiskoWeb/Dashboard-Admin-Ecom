@@ -32,13 +32,30 @@ export async function getCategories() {
   }
 }
 
-
 export async function DeleteCategory(categoryId: number) {
   try {
     const response = await axios.post(
       "http://localhost/adminDashboard/Backend/categories/delete.php",
-      {categoryId},
+      { categoryId }
+    );
 
+    console.log(response);
+    return response.data; // Return the response data directly
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function UpdateCategory(formData: FormData) {
+  try {
+    const response = await axios.post(
+      "http://localhost/adminDashboard/Backend/categories/update.php",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
 
     console.log(response);
