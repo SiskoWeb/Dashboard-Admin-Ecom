@@ -1,3 +1,4 @@
+import { usersType } from "@/types/types";
 import axios from "axios";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -6,8 +7,8 @@ export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
-        username: { type: "text", placeholder: "test@test.com" },
-        password: { type: "password", placeholder: "Pa$$w0rd" },
+        // email: { type: "text", placeholder: "test@test.com" },
+        // password: { type: "password", placeholder: "Pa$$w0rd" },
       },
 
       async authorize(credentials) {
@@ -28,10 +29,10 @@ export const options: NextAuthOptions = {
 
         const user = await authResponse.json();
 
-        if (user.user.isActive === false) {
-          console.log("not active");
-          return { status: 403 };
-        }
+        // if (user.user.isActive === 0) {
+        //   console.log("not active");
+        //   return null;
+        // }
         return user.user;
       },
     }),
@@ -41,20 +42,29 @@ export const options: NextAuthOptions = {
       session.user.id = token.id;
       session.user.isActive = token.isActive;
       session.user.role = token.role;
+
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.isActive = user.isActive;
-
         token.role = user.role;
-        if (user.isActive === false) {
-          console.log("not active");
-        }
+
         console.log({ user });
       }
       return token;
+    },
+
+    //this fun to hanlde activing accounts
+    async signIn({ user }) {
+      console.log(user.isActive);
+      if (user.isActive) {
+        return true;
+      } else {
+        // Return false to display a default error message
+        return false;
+      }
     },
   },
   session: {

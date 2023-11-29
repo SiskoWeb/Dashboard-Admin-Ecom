@@ -37,11 +37,12 @@ export default function RegisterForm() {
       setError("Password is Requierd");
       return;
     }
-
+    console.log(newUser.role);
     if (role === "") {
       setError("phone is Requierd");
       return;
-    } else if (role === "admin") newUser.isActive = true;
+    }
+    if (role === "admin") newUser.isActive = true;
 
     // display loading
     setLoading(true);

@@ -59,7 +59,7 @@ export default function LoginForm() {
         setTimeout(() => {
           setLoading(false);
           router.replace("/list");
-        }, 2000);
+        }, 1000);
       }
       //if user dosen't active
       if (response?.status === 403) {
@@ -75,6 +75,7 @@ export default function LoginForm() {
         return;
       }
     } catch (error) {
+      console.log(error);
       setError("there is a problem in nternet or server");
       setLoading(false);
     }
@@ -104,13 +105,14 @@ export default function LoginForm() {
           type="password"
           placeholder="Password"
         />
+        <button
+          onClick={(e) => handleSubmit(e)}
+          className="bg-[#2a66f9] text-white rounded-md font-bold cursor-pointer px-6 py-2"
+        >
+          Login
+        </button>
       </form>
-      <button
-        onClick={(e) => handleSubmit(e)}
-        className="bg-[#2a66f9] text-white rounded-md font-bold cursor-pointer px-6 py-2"
-      >
-        Login
-      </button>
+
       <div className="pt-3 text-white flex gap-1  items-center justify-center md:text-lg text-xs">
         <svg
           className="w-4 h-4 mr-2 text-green-500 dark:text-green-400 flex-shrink-0 opacity-60"

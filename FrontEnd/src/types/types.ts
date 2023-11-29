@@ -14,8 +14,9 @@ export type LayoutProviderType = {
 export type usersType = {
   id: number;
   email: string;
-  isActive: number | boolean;
+  isActive: number;
   role: string;
+  message: string;
 };
 
 export type categoryType = {
