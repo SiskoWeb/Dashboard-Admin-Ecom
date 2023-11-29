@@ -72,7 +72,7 @@ export default function FormCategory({
     //after mutating successfullt
     onSuccess: async () => {
       console.log("succssfully");
-      queryClient.invalidateQueries({ queryKey: ["categoriesList"] });
+      queryClient.invalidateQueries({ queryKey: ["ListCategories"] });
       setError("");
       setFile(null);
       setName("");

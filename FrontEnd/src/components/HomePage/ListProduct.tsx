@@ -5,6 +5,7 @@ import Filler from "./Fillter";
 import { productType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import Filtered from "./Filtered";
+import Fillter from "./Fillter";
 
 export default function ListProduct({
   productsList,
@@ -66,14 +67,16 @@ export default function ListProduct({
   const paginatedProducts = calculatePaginatedProducts();
 
   return (
-    <div className="bg-white flex-col min-w-screen min-h-screen items-start">
-      <Filtered
+    <section className="flex mt-10 md:flex-row gap-4 justify-center flex-col md:items-start items-center  ">
+      {" "}
+      <Fillter
         filterPrice={filterPrice}
         sorted={sortProducts}
         mutationFun={mutationFilter}
       />
-      <main className="m-4 p-4 shadow-md ">
-        <div className="min-w-screen grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-center justify-center p-4 cursor-pointer ">
+      <main className="m-4 p-4  ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4   items-center justify-center p-4  cursor-pointer w-full ">
+          {" "}
           {paginatedProducts.length === 0 ? (
             <h3>No Products</h3>
           ) : (
@@ -104,6 +107,6 @@ export default function ListProduct({
           </button>
         </div>
       </main>
-    </div>
+    </section>
   );
 }

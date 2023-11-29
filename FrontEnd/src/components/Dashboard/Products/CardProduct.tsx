@@ -29,42 +29,58 @@ export default function CardProduct({ product }: { product: productType }) {
   const discountAmount = (product.price * product.price_off) / 100;
   return (
     <>
-      <div className="relative w-72  bg-white shadow-md rounded-xl duration-500  hover:shadow-xl">
-        <a href="#">
+      <div className="relative flex  max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+        <a
+          className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
+          href="#"
+        >
           <Image
+            className="object-cover"
             src={product.image}
-            width="100"
-            height="120"
-            alt={product.name}
-            className="min-h-[200px] h-[200px] w-80 object-cover rounded-t-xl"
+            alt="product image"
+            width="500"
+            height="200"
           />
-          <div className="px-4 py-3 w-72">
-            <span className="text-gray-400 mr-3 uppercase text-xs">
-              {product && product.category}
-            </span>
-            <p className="text-lg font-bold text-black truncate block capitalize">
-              {product && product.name}
+
+          <span
+            className={`absolute top-0 left-0 m-2 rounded-full  px-2 text-center text-sm font-medium text-white ${
+              product.quantity > product.min_quantity
+                ? "bg-green-500"
+                : "bg-red-500"
+            }`}
+          >
+            {product.quantity} Units
+          </span>
+          <span className="absolute top-0 right-0 m-2 rounded-full bg-gray-400  px-2 text-center text-sm font-medium text-white">
+            {product.category}
+          </span>
+        </a>
+        <div className="mt-4 px-5 pb-5">
+          <a href="#">
+            <h5 className="text-xl tracking-tight text-slate-900">
+              {product.name}
+            </h5>
+          </a>
+          <div className="mt-2 mb-5 flex items-center justify-between">
+            <p>
+              <span className="text-3xl font-bold text-slate-900">
+                ${product.price}
+              </span>
             </p>
-            <div className="flex items-center">
-              <p className="text-lg font-semibold text-black cursor-auto my-3">
-                ${product && product.price - discountAmount}
-              </p>
-              <del>
-                <p className="text-sm text-gray-600 cursor-auto ml-2">
-                  ${product && product.price}
-                </p>
-              </del>
-              <div className="ml-auto flex gap-2">
-                <button onClick={() => setShouldShow(true)}>
-                  <FaRegPenToSquare />
-                </button>
-                <button onClick={() => mutateAsync()}>
-                  <FaRegTrashCan />
-                </button>
-              </div>
+            <div className=" flex  flex-col items-center justify-center px-2">
+              <span className="bg-red-500 text-white">Min Q</span>:{" "}
+              {product.min_quantity}
             </div>
           </div>
-        </a>
+          <div className="ml-auto flex gap-2 justify-between">
+            <button onClick={() => setShouldShow(true)}>
+              <FaRegPenToSquare />
+            </button>
+            <button onClick={() => mutateAsync()}>
+              <FaRegTrashCan />
+            </button>
+          </div>
+        </div>
       </div>
 
       <Model

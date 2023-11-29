@@ -14,10 +14,10 @@ export default async function ProductsList() {
   if (!products) return <Error />;
 
   return (
-    <>
+    <main className="flex min-h-screen flex-col justify-center items-center  h-full w-full bg-[#f5f6fa] gap-6 ">
       <NavBar />
       {/* {session.user.role === "admin" ? <SideBar /> : null} */}
       <ListProduct productsList={products} />
-    </>
+    </main>
   );
 }
